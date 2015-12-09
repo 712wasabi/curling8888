@@ -169,7 +169,6 @@ void Title()
 /*リザルト描写*/
 void Result()
 {
-    //test
 	PutText(L"距離:", (int)y[0]).from(0, 0);
 	PutText(L"ブラシポイント:", brushcount).from(0, 20);
 	PutText(L"難易度ボーナス:").from(0, 40);
