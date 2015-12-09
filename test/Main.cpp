@@ -142,6 +142,7 @@ void BackgroundMovement()
 /*タイトル描写*/
 void Title()
 {
+    //test
 	PutText(L"楽しい（楽しい）カーリングゲ～～～ム").from(0, 0);
 	PutText(L"[I]:EASY").from(0, 20);
 	PutText(L"[O]:NORMAL").from(0, 40);
