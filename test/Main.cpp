@@ -3,7 +3,7 @@
 
 #define ICENUM 300//背景の画像数
 
-/*列挙型の定義*/
+/*構造体の定義*/
 typedef struct{
     String name;
     double gspeed;
