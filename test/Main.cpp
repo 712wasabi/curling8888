@@ -3,7 +3,11 @@
 
 #define ICENUM 300//背景の画像数
 
-
+/*列挙型の定義*/
+typedef struct{
+    String name;
+    double gspeed;
+}Difficult_t;
 
 /*グローーーバルな変数たち----------------------*/
 int Screenpart = 0;//画面の状態変数 [0:タイトル　1:ゲーム画面]
@@ -31,9 +35,18 @@ int finishy = -200;//finishpicのy座標
 int score = 0;//スコア変数
 int bounus = 0;//難易度によるボーナスポイント
 
-int i;//for用
-/*----------------------------------------------*/
+Difficult_t difficult[4] = {
+    { L"Easy", 5.0 },
+    { L"Normal", 10.0 },
+    { L"Hard", 20.0 },
+    { L"Hell", 40.0 },
+};
 
+int difficult_cnt;
+
+int i;//for用
+
+/*----------------------------------------------*/
 
 
 /*デバック用数値表示*/
@@ -140,15 +153,41 @@ void BackgroundMovement()
 }
 
 /*タイトル描写*/
-void Title()
+void Title(Texture ice_p, Font titlefont, Font font)
 {
-    //test
-	PutText(L"楽しい（楽しい）カーリングゲ～～～ム").from(0, 0);
-	PutText(L"[I]:EASY").from(0, 20);
-	PutText(L"[O]:NORMAL").from(0, 40);
-	PutText(L"[P]:HARD").from(0, 60);
-	PutText(L"[L]:HELL").from(0, 80);
 
+    for (i = 0; i < ICENUM; i++){
+        ice_p.draw(0, y[i]);
+    }
+
+    /*文字の範囲を図形として取得*/
+    Rect start_rect = font(L" Start ").regionCenter(250);
+    Rect difficult_rect = font(L" Difficult ").regionCenter(300);
+
+    /*文字の描画*/
+    titlefont(L"カーリングゲーム").drawCenter(50,Color(0,0,0));
+    font(L"Start").drawCenter(250,Color(0,0,0));
+    font(difficult[difficult_cnt].name).drawCenter(300, Color(0, 0, 0));
+
+    /*クリックした時とマウスオーバー時のチェック*/
+    const bool start_clicked = start_rect.leftClicked;
+    const bool start_mouseover = start_rect.mouseOver;
+    const bool difficult_clicked = difficult_rect.leftClicked;
+    const bool difficult_mouseover = difficult_rect.mouseOver;
+
+    start_rect.draw(start_mouseover ? Color(0, 0, 255, 50) : Color(0, 0, 255, 0));//マウスオーバー時に半透明
+    difficult_rect.draw(difficult_mouseover ? Color(0, 0, 255, 50) : Color(0, 0, 255, 0));
+
+    if (start_clicked){//スタートボタンクリック
+        gagespeed = difficult[difficult_cnt].gspeed;
+        Screenpart = 1;
+    }
+
+    if (difficult_clicked){
+        difficult_cnt = ++difficult_cnt % 4;
+    }
+
+    /*
 	if (Input::KeyI.clicked){
 		gagespeed = 5.0;
 		Screenpart = 1;
@@ -165,6 +204,8 @@ void Title()
 		gagespeed = 40.0;
 		Screenpart = 1;
 	}
+    */
+
 }
 
 /*リザルト描写*/
@@ -228,7 +269,10 @@ void Main()
 	Texture gage(L"Picture/gage.png");//ゲージ画像読み込み
 	Texture brush(L"Picture/brush.png");//ブラシ画像読み込み
 	Texture finishpic(L"Picture/finishpic.png");//フィニッシュ画像読み込み
+
 	const Font font(30);
+    const Font font2(40, L"メイリオ");
+    const Font font3(20, L"メイリオ");
 	double radian = Radians(0.0);
 
 	while (System::Update())
@@ -237,7 +281,7 @@ void Main()
 		{
 		case 0://タイトル画面
 
-			Title();
+			Title(ice,font2,font3);
 
 			break;
 
